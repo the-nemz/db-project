@@ -103,33 +103,33 @@
 
     Group by: <select name="group" style="background-color: #595959">
       <option value=""></option>
-      <option value="genus_species">Species</option>
+      <option value="S.genus_species">Species</option>
     </select><br>
 
     Sort by: <select name="sort1" style="background-color: #595959">
       <option value=""></option>
-      <option value="genus_species">Species</option>
-      <option value="continent">Continent</option>
-      <option value="country">Country</option>
-      <option value="author">Discoverer</option>
-      <option value="year">Year discovered</option>
-      <option value="population">Population</option>
-      <option value="venomous">Venomous</option>
-      <option value="live_bearing">Live bearing</option>
+      <option value="S.genus_species">Species</option>
+      <option value="C.continent">Continent</option>
+      <option value="L.country">Country</option>
+      <option value="S.author">Discoverer</option>
+      <option value="S.year">Year discovered</option>
+      <option value="C.population">Population</option>
+      <option value="S.venomous">Venomous</option>
+      <option value="S.live_bearing">Live bearing</option>
     </select> <select name="sort1dir" style="background-color: #595959">
       <option value="">Direction</option>
       <option value="ASC">Ascending</option>
       <option value="DESC">Descencding</option>
     </select> and <select name="sort2" style="background-color: #595959">
       <option value=""></option>
-      <option value="genus_species">Species</option>
-      <option value="continent">Continent</option>
-      <option value="country">Country</option>
-      <option value="population">Population</option>
-      <option value="author">Discoverer</option>
-      <option value="year">Year discovered</option>
-      <option value="venomous">Venomous</option>
-      <option value="live_bearing">Live bearing</option>
+      <option value="S.genus_species">Species</option>
+      <option value="C.continent">Continent</option>
+      <option value="L.country">Country</option>
+      <option value="S.author">Discoverer</option>
+      <option value="S.year">Year discovered</option>
+      <option value="C.population">Population</option>
+      <option value="S.venomous">Venomous</option>
+      <option value="S.live_bearing">Live bearing</option>
     </select> <select name="sort2dir" style="background-color: #595959">
       <option value="">Direction</option>
       <option value="ASC">Ascending</option>

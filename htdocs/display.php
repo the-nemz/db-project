@@ -5,16 +5,16 @@
      * File that makes the actual query and displays the results on the page.
      */
 
-    $headmap = array("high_taxa" => "Higher Taxa",
-                    "genus_species" => "Genus species",
-                    "commonnames" => "Common Names",
-                    "continent" => "Continent",
-                    "country" => "Country",
-                    "population" => "Population",
-                    "author" => "Discoverer",
-                    "year" => "Discovered in",
-                    "venomous" => "Venomous?",
-                    "live_bearing" => "Live bearing?");
+    $headmap = array("S.high_taxa" => "Higher Taxa",
+                    "S.genus_species" => "Genus species",
+                    "S.common_name" => "Common Names",
+                    "C.continent" => "Continent",
+                    "L.country" => "Country",
+                    "C.population" => "Population",
+                    "S.author" => "Discoverer",
+                    "S.year" => "Discovered in",
+                    "S.venomous" => "Venomous?",
+                    "S.live_bearing" => "Live bearing?");
 
     $boolmap = array(0 => "No", 1 => "Yes");
 
@@ -28,10 +28,11 @@
     session_start();
     $heads = $_SESSION['headers'];
     if ($result = $conn->query($_SESSION['querystring'])) {
+        printf("Query: %s", $_SESSION['querystring']);
         /* free result set */
         //mysqli_free_result($result);
     } else {
-        printf("Query failed.\n");
+        printf("Query failed: %s", $_SESSION['querystring']);
     }
 
     $fields = array();

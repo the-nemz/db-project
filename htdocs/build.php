@@ -11,33 +11,35 @@
     $sort1 = $_POST['sort1'];
     $sort2 = $_POST['sort2'];
 
-    if ($sort1 == "continent" || $sort1 == "population" ||
-        $sort2 == "continent" || $sort2 == "population") {
+    if ($sort1 == "C.continent" || $sort1 == "C.population" ||
+        $sort2 == "C.continent" || $sort2 == "C.population") {
         $ordjoin = True;
     } else {
         $ordjoin = False;
     }
 
     if ($ordjoin || $cont = $_POST['cont'] || $pop = $_POST['pop']) {
-        $heads = array("genus_species", "commonnames", "continent",
-                       "country", "population", "author", "year",
-                       "venomous", "live_bearing");
+        $heads = array("S.genus_species", "S.common_name", "C.continent",
+                       "L.country", "C.population", "S.author", "S.year",
+                       "S.venomous", "S.live_bearing");
 
         $joined = True;
-        $qry = " (snake INNER JOIN country ON country=name)";
+        $qry = " snake S INNER JOIN lives_in L";
+        $qry .= " ON S.genus_species=L.genus_species";
+        $qry .= " INNER JOIN country C ON L.country=C.name";
 
         if ($cont = $_POST['cont']) {
             if ($where) {
-                $qry .= " AND continent='" . $cont . "'";
+                $qry .= " AND C.continent='" . $cont . "'";
             } else {
-                $qry .= " WHERE continent='" . $cont . "'";
+                $qry .= " WHERE C.continent='" . $cont . "'";
                 $where = True;
             }
-            $heads = array_diff($heads, array("continent"));
+            $heads = array_diff($heads, array("C.continent"));
         }
         if ($pop = $_POST['pop']) {
             if ($comp = $_POST['comp']) {
-                $adder = "population" . $comp . $pop;
+                $adder = "C.population" . $comp . $pop;
                 if ($where) {
                     $qry .= " AND " . $adder;
                 } else {
@@ -45,73 +47,74 @@
                     $where = True;
                 }
                 if ($comp == "=") {
-                    $heads = array_diff($heads, array("population"));
+                    $heads = array_diff($heads, array("C.population"));
                 }
             }
-        } elseif ($sort1 != "population" && $sort2 != "population") {
-            $heads = array_diff($heads, array("population"));
+        } elseif ($sort1 != "C.population" && $sort2 != "C.population") {
+            $heads = array_diff($heads, array("C.population"));
         }
 
     } else {
-        $heads = array("genus_species", "commonnames", "country",
-                       "author", "year", "venomous", "live_bearing");
-        $qry = " snake";
+        $heads = array("S.genus_species", "S.common_name", "L.country",
+                       "S.author", "S.year", "S.venomous", "S.live_bearing");
+        $qry = " snake S INNER JOIN lives_in L";
+        $qry .= " ON S.genus_species=L.genus_species";
     }
 
 
     if ($genus = $_POST['genus']) {
         if ($where) {
-            $qry .= " AND genus='" . $genus . "'";
+            $qry .= " AND S.genus='" . $genus . "'";
         } else {
-            $qry .= " WHERE genus='" . $genus . "'";
+            $qry .= " WHERE S.genus='" . $genus . "'";
             $where = True;
         }
     }
     if ($species = $_POST['species']) {
         if ($where) {
-            $qry .= " AND species='" . $species . "'";
+            $qry .= " AND S.species='" . $species . "'";
         } else {
-            $qry .= " WHERE species='" . $species . "'";
+            $qry .= " WHERE S.species='" . $species . "'";
             $where = True;
         }
     }
     if ($htaxa = $_POST['htaxa']) {
         if ($where) {
-            $qry .= " AND high_taxa LIKE '%" . $htaxa . "%'";
+            $qry .= " AND S.high_taxa LIKE '%" . $htaxa . "%'";
         } else {
-            $qry .= " WHERE high_taxa LIKE '%" . $htaxa . "%'";
+            $qry .= " WHERE S.high_taxa LIKE '%" . $htaxa . "%'";
             $where = True;
         }
         array_unshift($heads, "high_taxa");
     }
     if ($cname = $_POST['cname']) {
         if ($where) {
-            $qry .= " AND commonnames LIKE '%" . $cname . "%'";
+            $qry .= " AND S.common_name LIKE '%" . $cname . "%'";
         } else {
-            $qry .= " WHERE commonnames LIKE '%" . $cname . "%'";
+            $qry .= " WHERE S.common_name LIKE '%" . $cname . "%'";
             $where = True;
         }
     }
     if ($cnrty = $_POST['cnrty']) {
         if ($where) {
-            $qry .= " AND country='" . $cnrty . "'";
+            $qry .= " AND L.country='" . $cnrty . "'";
         } else {
-            $qry .= " WHERE country='" . $cnrty . "'";
+            $qry .= " WHERE L.country='" . $cnrty . "'";
             $where = True;
         }
-        $heads = array_diff($heads, array("country", "population"));
+        $heads = array_diff($heads, array("L.country", "C.population"));
     }
     if ($auth = $_POST['auth']) {
         if ($where) {
-            $qry .= " AND author LIKE '%" . $auth . "%'";
+            $qry .= " AND S.author LIKE '%" . $auth . "%'";
         } else {
-            $qry .= " WHERE author LIKE '%" . $auth . "%'";
+            $qry .= " WHERE S.author LIKE '%" . $auth . "%'";
             $where = True;
         }
     }
     if ($yeardis = $_POST['yeardis']) {
         if ($tframe = $_POST['tframe']) {
-            $adder = "year" . $tframe . $yeardis;
+            $adder = "S.year" . $tframe . $yeardis;
             if ($where) {
                 $qry .= " AND " . $adder;
             } else {
@@ -119,34 +122,34 @@
                 $where = True;
             }
             if ($tframe == "=") {
-                $heads = array_diff($heads, array("year"));
+                $heads = array_diff($heads, array("S.year"));
             }
         }
     }
     if ($venom = $_POST['venom']) {
-        $adder = "venomous" . $venom;
+        $adder = "S.venomous" . $venom;
         if ($where) {
             $qry .= " AND " . $adder;
         } else {
             $qry .= " WHERE " . $adder;
             $where = True;
         }
-        $heads = array_diff($heads, array("venomous"));
+        $heads = array_diff($heads, array("S.venomous"));
     }
     if ($liveb = $_POST['liveb']) {
-        $adder = "live_bearing" . $liveb;
+        $adder = "S.live_bearing" . $liveb;
         if ($where) {
             $qry .= " AND " . $adder;
         } else {
             $qry .= " WHERE " . $adder;
             $where = True;
         }
-        $heads = array_diff($heads, array("live_bearing"));
+        $heads = array_diff($heads, array("S.live_bearing"));
     }
 
     if ($groupby = $_POST['group']) {
-        $endqry = " GROUP BY genus_species ";
-        $heads = array_diff($heads, array("country", "population"));
+        $endqry = " GROUP BY S.genus_species ";
+        $heads = array_diff($heads, array("L.country", "L.population"));
     } else {
         $endqry = "";
     }
@@ -163,9 +166,9 @@
             if ($sort2dir = $_POST['sort2dir']) {
                 $endqry .= " " . $sort2dir;
             }
-            if ($sort2 == "population") {
-                $heads = array_diff($heads, array("country", "population"));
-                array_unshift($heads, "country", "population");
+            if ($sort2 == "C.population") {
+                $heads = array_diff($heads, array("L.country", "C.population"));
+                array_unshift($heads, "L.country", "C.population");
             } else {
                 $heads = array_diff($heads, array($sort2));
                 array_unshift($heads, $sort2);
@@ -173,9 +176,9 @@
 
         }
 
-        if ($sort1 == "population") {
-            $heads = array_diff($heads, array("country", "population"));
-            array_unshift($heads, "country", "population");
+        if ($sort1 == "C.population") {
+            $heads = array_diff($heads, array("L.country", "C.population"));
+            array_unshift($heads, "L.country", "C.population");
         } else {
             $heads = array_diff($heads, array($sort1));
             array_unshift($heads, $sort1);
