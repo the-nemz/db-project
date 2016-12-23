@@ -1,0 +1,15 @@
+/*
+
+!/mysql
+/mysql/*
+!/mysql/bin
+/mysql/bin/*
+!/mysql/bin/*.py
+!/mysql/bin/*.tab
+
+!/htdocs
+/htdocs/*
+!/htdocs/*.php
+!/htdocs/*.gif
+
+!.gitignore
